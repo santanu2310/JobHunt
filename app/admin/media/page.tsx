@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import ImageCard from "@/app/(admin)/admin/_components/imageCard";
-import VideoCard from "@/app/(admin)/admin/_components/videoCard";
+import ImageCard from "@/app/admin/_components/imageCard";
+import VideoCard from "@/app/admin/_components/videoCard";
 
 type ImageItem = {
     id: number;

@@ -1,17 +1,17 @@
 import "dotenv/config";
-import { PrismaClient } from "../generated/prisma";
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import bcrypt from "bcrypt";
+import { createAdminSchema } from "../lib/zod";
+import { userRepository } from "../lib/repository/users";
 
 async function main() {
-  const prisma = new PrismaClient();
   const rl = readline.createInterface({ input, output });
 
   try {
     const email = await rl.question("Enter admin email (username): ");
     const name = await rl.question("Enter admin name: ");
-    
+
     let password = "";
     let confirmPassword = "";
 
@@ -25,22 +25,29 @@ async function main() {
       console.log("Passwords do not match or are empty. Please try again.");
     }
 
+    // Validate with zod
+    const result = createAdminSchema.safeParse({ email, password, name: name || undefined });
+
+    if (!result.success) {
+      console.error("Validation failed:");
+      result.error.issues.forEach((issue) => {
+        console.error(`  - ${issue.path.join(".")}: ${issue.message}`);
+      });
+      return;
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
-      data: {
-        email,
-        name,
-        password: hashedPassword, 
-        isAdmin: true,
-      },
+    const user = await userRepository.createAdmin({
+      email: result.data.email,
+      name: result.data.name,
+      password: hashedPassword,
     });
 
     console.log(`Admin created ${user.name || user.email}`);
   } catch (error) {
     console.error("Error creating admin:", error);
   } finally {
-    await prisma.$disconnect();
     rl.close();
   }
 }

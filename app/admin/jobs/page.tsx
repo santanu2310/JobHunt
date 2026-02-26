@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AddJob from "@/app/(admin)/admin/_components/addJob";
+import AddJob from "@/app/admin/_components/addJob";
 
 type Job = {
     id: number;
