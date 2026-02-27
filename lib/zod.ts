@@ -1,4 +1,4 @@
-import { object, string } from "zod";
+import { object, string, boolean } from "zod";
 
 export const signInSchema = object({
   email: string({ required_error: "Email is required" })
@@ -34,3 +34,22 @@ export const signUpSchema = object({
     .max(32, "Password must be less than 32 characters"),
 });
 
+export const createJobSchema = object({
+  title: string({ required_error: "Title is required" }).min(
+    1,
+    "Title is required",
+  ),
+  designation: string({ required_error: "Designation is required" }).min(
+    1,
+    "Designation is required",
+  ),
+  salary: string().optional(),
+  category: string().optional(),
+  jobType: string().optional(),
+  location: string().optional(),
+  deadline: string().optional(),
+  image: string().optional(),
+  skills: string().optional(),
+  details: string().optional(),
+  isActive: boolean().optional(),
+});

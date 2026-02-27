@@ -1,59 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect } from "react";
 import { X } from "lucide-react";
+import { createJob, updateJob } from "@/actions/jobs";
 
-type JobFormData = {
+type Job = {
+    id: string;
     title: string;
     designation: string;
-    salary: string;
-    jobType: string;
-    category: string;
-    deadline: string;
-    location: string;
-    image: File | null;
-    skills: string;
-    details: string;
-};
-
-const initialForm: JobFormData = {
-    title: "",
-    designation: "",
-    salary: "",
-    jobType: "",
-    category: "",
-    deadline: "",
-    location: "",
-    image: null,
-    skills: "",
-    details: "",
+    salary: string | null;
+    category: string | null;
+    jobType: string | null;
+    location: string | null;
+    deadline: string | null;
+    image: string | null;
+    skills: string | null;
+    details: string | null;
+    isActive: boolean;
 };
 
 type AddJobProps = {
     onClose: () => void;
-    onSubmit?: (data: JobFormData) => void;
+    onJobCreated?: (job: Job) => void;
+    onJobUpdated?: (job: Job) => void;
+    editJob?: Job | null;
 };
 
-export default function AddJob({ onClose, onSubmit }: AddJobProps) {
-    const [form, setForm] = useState<JobFormData>(initialForm);
+export default function AddJob({ onClose, onJobCreated, onJobUpdated, editJob }: AddJobProps) {
+    const isEditMode = !!editJob;
 
-    function handleChange(
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-    }
+    const [createState, createAction, isCreating] = useActionState(createJob, undefined);
+    const [updateState, updateAction, isUpdating] = useActionState(updateJob, undefined);
 
-    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0] ?? null;
-        setForm((prev) => ({ ...prev, image: file }));
-    }
+    const state = isEditMode ? updateState : createState;
+    const formAction = isEditMode ? updateAction : createAction;
+    const isPending = isEditMode ? isUpdating : isCreating;
 
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        onSubmit?.(form);
-        onClose();
-    }
+    useEffect(() => {
+        if (state?.success) {
+            if (isEditMode && state.job && onJobUpdated) {
+                onJobUpdated(state.job as Job);
+            } else if (!isEditMode && state.job && onJobCreated) {
+                onJobCreated(state.job as Job);
+            }
+            onClose();
+        }
+    }, [state?.success, onClose, onJobCreated, onJobUpdated, state?.job, isEditMode]);
 
     const inputClass =
         "w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition";
@@ -70,15 +62,26 @@ export default function AddJob({ onClose, onSubmit }: AddJobProps) {
                 <X size={20} />
             </button>
 
-            <h2 className="text-lg font-bold text-blue-900 mb-5">Add Job Details</h2>
+            <h2 className="text-lg font-bold text-blue-900 mb-5">
+                {isEditMode ? "Edit Job Details" : "Add Job Details"}
+            </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Error Message */}
+            {state?.error && (
+                <p className="text-red-500 text-sm mb-3">{state.error}</p>
+            )}
+
+            <form action={formAction} className="space-y-4">
+                {/* Hidden ID field for edit mode */}
+                {isEditMode && (
+                    <input type="hidden" name="id" value={editJob.id} />
+                )}
+
                 {/* Full-width: Job Title */}
                 <input
                     type="text"
                     name="title"
-                    value={form.title}
-                    onChange={handleChange}
+                    defaultValue={editJob?.title ?? ""}
                     placeholder="Enter Job Title (Like Hotel Udaan Designer Team)"
                     className={inputClass}
                 />
@@ -88,16 +91,14 @@ export default function AddJob({ onClose, onSubmit }: AddJobProps) {
                     <input
                         type="text"
                         name="designation"
-                        value={form.designation}
-                        onChange={handleChange}
+                        defaultValue={editJob?.designation ?? ""}
                         placeholder="Designation (Like Sr. Graphic Designer)"
                         className={inputClass}
                     />
                     <input
                         type="text"
                         name="salary"
-                        value={form.salary}
-                        onChange={handleChange}
+                        defaultValue={editJob?.salary ?? ""}
                         placeholder="Salary (Like 15k)"
                         className={inputClass}
                     />
@@ -108,16 +109,14 @@ export default function AddJob({ onClose, onSubmit }: AddJobProps) {
                     <input
                         type="text"
                         name="jobType"
-                        value={form.jobType}
-                        onChange={handleChange}
+                        defaultValue={editJob?.jobType ?? ""}
                         placeholder="Job Type (Like Full-Time)"
                         className={inputClass}
                     />
                     <input
                         type="text"
                         name="category"
-                        value={form.category}
-                        onChange={handleChange}
+                        defaultValue={editJob?.category ?? ""}
                         placeholder="Category (Like Design & Architecture)"
                         className={inputClass}
                     />
@@ -128,16 +127,14 @@ export default function AddJob({ onClose, onSubmit }: AddJobProps) {
                     <input
                         type="text"
                         name="deadline"
-                        value={form.deadline}
-                        onChange={handleChange}
+                        defaultValue={editJob?.deadline ?? ""}
                         placeholder="Deadline (Like 22 December 2025)"
                         className={inputClass}
                     />
                     <input
                         type="text"
                         name="location"
-                        value={form.location}
-                        onChange={handleChange}
+                        defaultValue={editJob?.location ?? ""}
                         placeholder="Location (Like Darjeeling, India)"
                         className={inputClass}
                     />
@@ -149,14 +146,12 @@ export default function AddJob({ onClose, onSubmit }: AddJobProps) {
                         type="file"
                         name="image"
                         accept="image/*"
-                        onChange={handleFileChange}
                         className={`${inputClass} cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100`}
                     />
                     <input
                         type="text"
                         name="skills"
-                        value={form.skills}
-                        onChange={handleChange}
+                        defaultValue={editJob?.skills ?? ""}
                         placeholder="Skill Name (Like React, CSS, HTML)"
                         className={inputClass}
                     />
@@ -165,8 +160,7 @@ export default function AddJob({ onClose, onSubmit }: AddJobProps) {
                 {/* Full-width: Details */}
                 <textarea
                     name="details"
-                    value={form.details}
-                    onChange={handleChange}
+                    defaultValue={editJob?.details ?? ""}
                     placeholder="Full job details..."
                     rows={7}
                     className={`${inputClass} resize-none`}
@@ -176,9 +170,13 @@ export default function AddJob({ onClose, onSubmit }: AddJobProps) {
                 <div className="flex items-center gap-4 pt-1">
                     <button
                         type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-8 py-2.5 rounded-md transition-colors"
+                        disabled={isPending}
+                        className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-8 py-2.5 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Submit
+                        {isPending
+                            ? (isEditMode ? "Updating..." : "Submitting...")
+                            : (isEditMode ? "Update" : "Submit")
+                        }
                     </button>
                     <button
                         type="button"

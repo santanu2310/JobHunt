@@ -12,6 +12,7 @@ import {
     Bell,
     UserCircle,
 } from "lucide-react";
+import { NotificationProvider } from "./_components/notification";
 
 type NavItem = {
     label: string;
@@ -181,8 +182,10 @@ export default function AdminLayout({
 }) {
     return (
         <div className="min-h-screen bg-gray-50">
-            <AdminNavbar />
-            <main className="p-6">{children}</main>
+            <NotificationProvider>
+                <AdminNavbar />
+                <main className="p-6">{children}</main>
+            </NotificationProvider>
         </div>
     );
 }
