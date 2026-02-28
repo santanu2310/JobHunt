@@ -7,20 +7,23 @@ type SlideCardProps = {
     image: string;
     name: string;
     active?: boolean;
+    selected?: boolean;
     onView?: () => void;
     onDelete?: () => void;
     onToggle?: (active: boolean) => void;
+    onSelect?: (selected: boolean) => void;
 };
 
 export default function SlideCard({
     image,
     name,
     active: initialActive = true,
+    selected = false,
     onView,
     onDelete,
     onToggle,
+    onSelect,
 }: SlideCardProps) {
-    const [selected, setSelected] = useState(false);
     const [active, setActive] = useState(initialActive);
 
     function handleToggle() {
@@ -41,10 +44,10 @@ export default function SlideCard({
                 />
                 {/* Checkbox */}
                 <button
-                    onClick={() => setSelected((prev) => !prev)}
+                    onClick={() => onSelect?.(!selected)}
                     className={`absolute top-2 right-2 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${selected
-                            ? "bg-blue-600 border-blue-600 text-white"
-                            : "bg-white/80 border-gray-300 text-transparent hover:border-blue-400"
+                        ? "bg-blue-600 border-blue-600 text-white"
+                        : "bg-white/80 border-gray-300 text-transparent hover:border-blue-400"
                         }`}
                     aria-label="Select slide"
                 >

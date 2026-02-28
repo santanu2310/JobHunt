@@ -1,10 +1,10 @@
 import { object, string, boolean } from "zod";
 
 export const signInSchema = object({
-  email: string({ required_error: "Email is required" })
+  email: string({ error: "Email is required" })
     .min(1, "Email is required")
     .email("Invalid email"),
-  password: string({ required_error: "Password is required" })
+  password: string({ error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
@@ -12,11 +12,11 @@ export const signInSchema = object({
 
 export const createAdminSchema = object({
   email: string({
-    required_error: "Email is required",
+    error: "Email is required",
   })
     .min(1, "Email is required")
     .email("Invalid email"),
-  password: string({ required_error: "Password is required" })
+  password: string({ error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
@@ -25,21 +25,21 @@ export const createAdminSchema = object({
 
 export const signUpSchema = object({
   name: string().optional(),
-  email: string({ required_error: "Email is required" })
+  email: string({ error: "Email is required" })
     .min(1, "Email is required")
     .email("Invalid email"),
-  password: string({ required_error: "Password is required" })
+  password: string({ error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
 });
 
 export const createJobSchema = object({
-  title: string({ required_error: "Title is required" }).min(
+  title: string({ error: "Title is required" }).min(
     1,
     "Title is required",
   ),
-  designation: string({ required_error: "Designation is required" }).min(
+  designation: string({ error: "Designation is required" }).min(
     1,
     "Designation is required",
   ),
@@ -52,4 +52,15 @@ export const createJobSchema = object({
   skills: string().optional(),
   details: string().optional(),
   isActive: boolean().optional(),
+});
+
+export const createSliderSchema = object({
+  name: string({ error: "Slider name is required" }).min(
+    1,
+    "Slider name is required",
+  ),
+  imageUrl: string({ error: "Slider image is required" }).min(
+    1,
+    "Slider image is required",
+  ),
 });
