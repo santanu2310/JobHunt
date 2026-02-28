@@ -1,7 +1,7 @@
 import "dotenv/config";
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { createAdminSchema } from "../lib/zod";
 import { userRepository } from "../lib/repository/users";
 
