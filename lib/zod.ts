@@ -1,9 +1,8 @@
-import { object, string, boolean } from "zod";
+import { object, string, boolean, email } from "zod";
 
 export const signInSchema = object({
-  email: string({ error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email"),
+  email: email({ error: "Invalid email" })
+    .min(1, "Email is required"),
   password: string({ error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
@@ -11,11 +10,10 @@ export const signInSchema = object({
 });
 
 export const createAdminSchema = object({
-  email: string({
-    error: "Email is required",
+  email: email({
+    error: "Invalid email",
   })
-    .min(1, "Email is required")
-    .email("Invalid email"),
+    .min(1, "Email is required"),
   password: string({ error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
@@ -25,9 +23,8 @@ export const createAdminSchema = object({
 
 export const signUpSchema = object({
   name: string().optional(),
-  email: string({ error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email"),
+  email: email({ error: "Invalid email" })
+    .min(1, "Email is required"),
   password: string({ error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")

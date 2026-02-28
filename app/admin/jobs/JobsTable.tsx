@@ -4,6 +4,7 @@ import { useState } from "react";
 import AddJob from "@/app/admin/_components/addJob";
 import { deleteJob, toggleJobActive } from "@/actions/jobs";
 import { useNotification } from "@/app/admin/_components/notification";
+import { JobCard } from "@/app/(user)/jobs/_components/job-card";
 
 type Job = {
     id: string;
@@ -29,6 +30,7 @@ export default function JobsTable({ initialJobs }: JobsTableProps) {
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [showAddJob, setShowAddJob] = useState(false);
     const [editingJob, setEditingJob] = useState<Job | null>(null);
+    const [viewingJob, setViewingJob] = useState<Job | null>(null);
     const { notify } = useNotification();
 
     const allSelected = jobs.length > 0 && selectedIds.length === jobs.length;
@@ -141,7 +143,10 @@ export default function JobsTable({ initialJobs }: JobsTableProps) {
                                 <td className="px-4 py-3 text-gray-600">{job.deadline ?? "—"}</td>
                                 <td className="px-4 py-3">
                                     <div className="flex items-center gap-2 whitespace-nowrap">
-                                        <button className="text-blue-600 hover:underline font-medium">
+                                        <button
+                                            onClick={() => setViewingJob(job)}
+                                            className="text-blue-600 hover:underline font-medium"
+                                        >
                                             View
                                         </button>
                                         <span className="text-gray-300">|</span>
@@ -203,6 +208,29 @@ export default function JobsTable({ initialJobs }: JobsTableProps) {
                                 notify("Job updated successfully!", "success");
                             }}
                         />
+                    </div>
+                </div>
+            )}
+
+            {/* View Job Preview Modal */}
+            {viewingJob && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+                    onClick={() => setViewingJob(null)}
+                >
+                    <div
+                        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-gray-50 rounded-2xl p-6 animate-[fadeIn_0.2s_ease-out]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setViewingJob(null)}
+                            className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-300 transition-colors shadow-sm"
+                            aria-label="Close preview"
+                        >
+                            <i className="ri-close-line text-lg"></i>
+                        </button>
+                        <JobCard job={{ ...viewingJob, createdAt: new Date(), updatedAt: new Date() }} />
                     </div>
                 </div>
             )}

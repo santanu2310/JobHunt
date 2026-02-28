@@ -95,6 +95,9 @@ export default function SliderPage() {
     }
   }
 
+  const inputClass =
+    "border border-gray-300 rounded-md px-3 py-2.5 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition";
+
   return (
     <div className="space-y-6">
       {/* Page Title */}
@@ -108,27 +111,27 @@ export default function SliderPage() {
           type="text"
           name="name"
           placeholder="Slider Name"
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-36"
+          className={`${inputClass} py-3 border border-gray-300 rounded-md text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-36`}
         />
-        <button
+        {/* <button
           type="button"
           onClick={() => fileRef.current?.click()}
           className="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-400 hover:border-gray-400 transition-colors w-40 text-left truncate"
         >
           {file ? file.name : "Choose file.."}
-        </button>
+        </button> */}
         <input
           ref={fileRef}
           type="file"
           name="image"
           accept="image/*"
           onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          className="hidden"
+          className={`${inputClass} w-60 cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100`}
         />
         <button
           type="submit"
           disabled={isPending}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 py-2 rounded-md transition-colors disabled:opacity-50"
+          className="py-3 px-10 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md transition-colors disabled:opacity-50"
         >
           {isPending ? "Submitting..." : "Submit"}
         </button>
@@ -136,24 +139,9 @@ export default function SliderPage() {
           type="button"
           disabled={selectedIds.size === 0}
           onClick={() => setShowBulkDelete(true)}
-          className="bg-gray-800 hover:bg-gray-900 text-white text-sm font-semibold px-6 py-2 rounded-md transition-colors flex items-center gap-1 disabled:opacity-50"
+          className="py-3 px-10 bg-gray-800 hover:bg-gray-900 text-white text-sm font-semibold rounded-md transition-colors disabled:opacity-50"
         >
           Delete
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            className="mt-0.5"
-          >
-            <path
-              d="M3 5l3 3 3-3"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </button>
       </form>
 
