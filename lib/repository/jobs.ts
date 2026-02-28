@@ -7,6 +7,13 @@ export const jobRepository = {
     });
   },
 
+  async getAllActiveJobs() {
+    return await prisma.job.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "desc" },
+    });
+  },
+
   async getById(id: string) {
     return await prisma.job.findUnique({ where: { id } });
   },

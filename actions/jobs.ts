@@ -56,8 +56,13 @@ export async function createJob(
   }
 }
 
-export async function getAllJobs() {
+export async function getAllJobs(isActive?: boolean) {
   try {
+    if (isActive != null) {
+      const jobs = await jobRepository.getAllActiveJobs();
+      return { jobs };
+    }
+
     const jobs = await jobRepository.getAllJobs();
     return { jobs };
   } catch (error) {

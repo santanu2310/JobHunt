@@ -2,7 +2,7 @@ import { JobCard } from "./_components/job-card";
 import { getAllJobs } from "@/actions/jobs";
 
 export default async function JobDetailsPage() {
-    const { jobs, error } = await getAllJobs();
+    const { jobs, error } = await getAllJobs(true);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -40,14 +40,14 @@ export default async function JobDetailsPage() {
                                     <input
                                         type="text"
                                         placeholder="Name"
-                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-900 placeholder:text-gray-400"
                                     />
                                 </div>
                                 <div>
                                     <input
                                         type="tel"
                                         placeholder="Mobile Number"
-                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-900 placeholder:text-gray-400"
                                     />
                                 </div>
                                 <div>
@@ -64,14 +64,14 @@ export default async function JobDetailsPage() {
                                     <input
                                         type="text"
                                         placeholder="Location"
-                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-900 placeholder:text-gray-400"
                                     />
                                 </div>
                                 <div>
                                     <textarea
                                         placeholder="Message"
                                         rows={4}
-                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-900 placeholder:text-gray-400 resize-none"
                                     ></textarea>
                                 </div>
                                 <button type="button" className="w-full bg-[#4F75FF] hover:bg-blue-600 text-white font-medium py-3 rounded-lg transition-colors">
@@ -80,10 +80,7 @@ export default async function JobDetailsPage() {
                             </form>
                             {/* Image Placeholder */}
                             <div className="w-full mt-6 aspect-3/4 overflow-hidden rounded-xl bg-gray-200 relative">
-                                <div className="absolute inset-0 bg-zinc-200/50 flex flex-col items-center justify-center text-gray-400">
-                                    <i className="ri-image-line text-4xl mb-2"></i>
-                                    <span>Image Placeholder</span>
-                                </div>
+                                <img src="/image.png" alt="" className="w-full h-full object-cover" />
                             </div>
                         </div>
                     </div>
